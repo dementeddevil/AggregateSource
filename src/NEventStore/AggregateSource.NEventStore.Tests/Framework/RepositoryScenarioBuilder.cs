@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AggregateSource.NEventStore.Framework.Snapshots;
 using AggregateSource.NEventStore.Snapshots;
 using NEventStore;
@@ -9,7 +10,7 @@ namespace AggregateSource.NEventStore.Framework
     public class RepositoryScenarioBuilder
     {
         readonly IStoreEvents _eventStore;
-        readonly List<Action<IStoreEvents>> _eventStoreSchedule;
+        readonly List<Func<IStoreEvents, Task>> _eventStoreSchedule;
         readonly List<Action<UnitOfWork>> _unitOfWorkSchedule;
         UnitOfWork _unitOfWork;
 
@@ -17,7 +18,7 @@ namespace AggregateSource.NEventStore.Framework
         {
             _eventStore = Wireup.Init().UsingInMemoryPersistence().Build();
             _unitOfWork = new UnitOfWork();
-            _eventStoreSchedule = new List<Action<IStoreEvents>>();
+            _eventStoreSchedule = new List<Func<IStoreEvents, Task>>();
             _unitOfWorkSchedule = new List<Action<UnitOfWork>>();
         }
 
@@ -32,13 +33,15 @@ namespace AggregateSource.NEventStore.Framework
             if (stream == null) throw new ArgumentNullException("stream");
             if (events == null) throw new ArgumentNullException("events");
             _eventStoreSchedule.Add(
-                store =>
+                async store =>
                 {
-                    using (var _ = store.OpenStream(stream, 0))
+                    using (var _ = await store.OpenStream(stream, 0))
                     {
-                        foreach (var @event in events)
-                            _.Add(new EventMessage {Body = @event});
-                        _.CommitChanges(Guid.NewGuid());
+						foreach (var @event in events)
+						{
+							_.Add(new EventMessage { Body = @event });
+						}
+                        await _.CommitChanges(Guid.NewGuid());
                     }
                 });
             return this;
@@ -48,10 +51,12 @@ namespace AggregateSource.NEventStore.Framework
         {
             if (snapshots == null) throw new ArgumentNullException("snapshots");
             _eventStoreSchedule.Add(
-                store =>
+                async store =>
                 {
-                    foreach (var snapshot in snapshots)
-                        store.Advanced.AddSnapshot(snapshot);
+					foreach (var snapshot in snapshots)
+					{
+						await store.Advanced.AddSnapshot(snapshot);
+					}
                 });
             return this;
         }
@@ -70,29 +75,29 @@ namespace AggregateSource.NEventStore.Framework
             return this;
         }
 
-        public Repository<AggregateRootEntityStub> BuildForRepository()
+        public async Task<Repository<AggregateRootEntityStub>> BuildForRepository()
         {
-            ExecuteScheduledActions();
+            await ExecuteScheduledActions();
             return new Repository<AggregateRootEntityStub>(
                 AggregateRootEntityStub.Factory,
                 _unitOfWork,
                 _eventStore);
         }
 
-        public SnapshotableRepository<SnapshotableAggregateRootEntityStub> BuildForSnapshotableRepository()
+        public async Task<SnapshotableRepository<SnapshotableAggregateRootEntityStub>> BuildForSnapshotableRepository()
         {
-            ExecuteScheduledActions();
+            await ExecuteScheduledActions();
             return new SnapshotableRepository<SnapshotableAggregateRootEntityStub>(
                 SnapshotableAggregateRootEntityStub.Factory,
                 _unitOfWork,
                 _eventStore);
         }
 
-        void ExecuteScheduledActions()
+        private async Task ExecuteScheduledActions()
         {
             foreach (var action in _eventStoreSchedule)
             {
-                action(_eventStore);
+                await action(_eventStore);
             }
             foreach (var action in _unitOfWorkSchedule)
             {

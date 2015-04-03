@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NEventStore;
 
 namespace AggregateSource.NEventStore.Snapshots
@@ -8,7 +9,7 @@ namespace AggregateSource.NEventStore.Snapshots
     /// Represents a virtual collection of <typeparamref name="TAggregateRoot"/>.
     /// </summary>
     /// <typeparam name="TAggregateRoot">The type of the aggregate root in this collection.</typeparam>
-    public class SnapshotableRepository<TAggregateRoot> : IRepository<TAggregateRoot>
+    public class SnapshotableRepository<TAggregateRoot> : IAsyncRepository<TAggregateRoot>
         where TAggregateRoot : IAggregateRootEntity, ISnapshotable
     {
         readonly Func<TAggregateRoot> _rootFactory;
@@ -71,9 +72,9 @@ namespace AggregateSource.NEventStore.Snapshots
         /// <param name="identifier">The aggregate identifier.</param>
         /// <returns>An instance of <typeparamref name="TAggregateRoot"/>.</returns>
         /// <exception cref="AggregateNotFoundException">Thrown when an aggregate is not found.</exception>
-        public TAggregateRoot Get(string identifier)
+		public async Task<TAggregateRoot> GetAsync(string identifier)
         {
-            var result = GetOptional(identifier);
+            var result = await GetOptionalAsync(identifier);
             if (!result.HasValue)
                 throw new AggregateNotFoundException(identifier, typeof (TAggregateRoot));
             return result.Value;
@@ -84,17 +85,17 @@ namespace AggregateSource.NEventStore.Snapshots
         /// </summary>
         /// <param name="identifier">The aggregate identifier.</param>
         /// <returns>The found <typeparamref name="TAggregateRoot"/>, or empty if not found.</returns>
-        public Optional<TAggregateRoot> GetOptional(string identifier)
+        public async Task<Optional<TAggregateRoot>> GetOptionalAsync(string identifier)
         {
             Aggregate aggregate;
             if (_unitOfWork.TryGet(identifier, out aggregate))
             {
                 return new Optional<TAggregateRoot>((TAggregateRoot) aggregate.Root);
             }
-            var snapshot = _eventStore.Advanced.GetSnapshot(identifier, Int32.MaxValue);
+            var snapshot = await _eventStore.Advanced.GetSnapshot(identifier, Int32.MaxValue);
             if (snapshot != null)
             {
-                using (var stream = _eventStore.OpenStream(snapshot, Int32.MaxValue))
+                using (var stream = await _eventStore.OpenStream(snapshot, Int32.MaxValue))
                 {
                     var root = _rootFactory();
                     root.RestoreSnapshot(snapshot.Payload);
@@ -103,10 +104,12 @@ namespace AggregateSource.NEventStore.Snapshots
                     return new Optional<TAggregateRoot>(root);
                 }
             }
-            using (var stream = _eventStore.OpenStream(identifier, minRevision: 0))
+            using (var stream = await _eventStore.OpenStream(identifier, minRevision: 0))
             {
-                if (stream.StreamRevision == 0)
-                    return Optional<TAggregateRoot>.Empty;
+				if (stream.StreamRevision == 0)
+				{
+					return Optional<TAggregateRoot>.Empty;
+				}
 
                 var root = _rootFactory();
                 root.Initialize(stream.CommittedEvents.Select(eventMessage => eventMessage.Body));
