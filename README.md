@@ -1,5 +1,9 @@
-AggregateSource
-===============
+AggregateSourceAsync
+====================
+
+This project differs from AggregateSource upon which is it heavily based. The async model has been enhanced to allow cancellation tokens to be passed and this is most useful when paired with the AggregateSourceAsync.NEventStoreAsync project which correctly exposes asynchronous operations.
+
+The project is dependent upon .NET 4.6 or .NET Standard 2.0.
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yreynhout/AggregateSource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
