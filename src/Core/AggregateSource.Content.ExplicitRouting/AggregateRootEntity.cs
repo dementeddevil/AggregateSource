@@ -29,7 +29,7 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="handler"/> is null.</exception>
         protected void Register<TEvent>(Action<TEvent> handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             _router.ConfigureRoute(handler);
         }
 
@@ -40,7 +40,7 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="events"/> are null.</exception>
         public void Initialize(IEnumerable<object> events)
         {
-            if (events == null) throw new ArgumentNullException("events");
+            if (events == null) throw new ArgumentNullException(nameof(events));
             if (HasChanges())
                 throw new InvalidOperationException("Initialize cannot be called on an instance with changes.");
             foreach (var @event in events)
@@ -55,7 +55,7 @@ namespace AggregateSource
         /// <param name="event">The event to apply.</param>
         protected void ApplyChange(object @event)
         {
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             BeforeApplyChange(@event);
             Play(@event);
             Record(@event);

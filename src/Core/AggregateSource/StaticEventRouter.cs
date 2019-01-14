@@ -27,7 +27,7 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="handler" /> is <c>null</c>.</exception>
         public void ConfigureRoute<TInstance, TEvent>(Action<TInstance, TEvent> handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             Dictionary<Type, Action<object, object>> handlers;
             if (!_index.TryGetValue(typeof(TInstance), out handlers))
             {
@@ -46,9 +46,9 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="instance"/> or <paramref name="event"/> or <paramref name="handler"/> is <c>null</c>.</exception>
         public void ConfigureRoute(Type instance, Type @event, Action<object, object> handler)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
-            if (@event == null) throw new ArgumentNullException("event");
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             Dictionary<Type, Action<object, object>> handlers;
             if (!_index.TryGetValue(instance, out handlers))
             {
@@ -66,8 +66,8 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="instance"/> or <paramref name="event"/> is <c>null</c>.</exception>
         public void Route(object instance, object @event)
         {
-            if (instance == null) throw new ArgumentNullException("instance");
-            if (@event == null) throw new ArgumentNullException("event");
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             Dictionary<Type, Action<object, object>> handlers;
             if (!_index.TryGetValue(instance.GetType(), out handlers)) return;
             Action<object, object> handler;

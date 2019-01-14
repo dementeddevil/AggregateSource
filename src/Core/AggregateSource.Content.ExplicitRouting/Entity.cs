@@ -17,7 +17,7 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="applier"/> is null.</exception>
         protected Entity(Action<object> applier)
         {
-            if (applier == null) throw new ArgumentNullException("applier");
+            if (applier == null) throw new ArgumentNullException(nameof(applier));
             _applier = applier;
             _router = new InstanceEventRouter();
         }
@@ -30,7 +30,7 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="handler"/> is null.</exception>
         protected void Register<TEvent>(Action<TEvent> handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             _router.ConfigureRoute(handler);
         }
 
@@ -41,7 +41,7 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="event"/> is null.</exception>
         public void Route(object @event)
         {
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             _router.Route(@event);
         }
 
@@ -51,7 +51,7 @@ namespace AggregateSource
         /// <param name="event">The event to apply.</param>
         protected void Apply(object @event)
         {
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             _applier(@event);
         }
     }

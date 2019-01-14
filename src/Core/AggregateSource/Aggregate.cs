@@ -21,13 +21,9 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="root"/> is null.</exception>
         public Aggregate(string identifier, int expectedVersion, IAggregateRootEntity root)
         {
-            if (identifier == null)
-                throw new ArgumentNullException("identifier");
-            if (root == null)
-                throw new ArgumentNullException("root");
-            _identifier = identifier;
+            _identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
             _expectedVersion = expectedVersion;
-            _root = root;
+            _root = root ?? throw new ArgumentNullException(nameof(root));
         }
 
         /// <summary>
@@ -36,18 +32,12 @@ namespace AggregateSource
         /// <value>
         /// The aggregate identifier.
         /// </value>
-        public string Identifier
-        {
-            get { return _identifier; }
-        }
+        public string Identifier => _identifier;
 
         /// <summary>
         /// Gets the aggregate version.
         /// </summary>
-        public Int32 ExpectedVersion
-        {
-            get { return _expectedVersion; }
-        }
+        public int ExpectedVersion => _expectedVersion;
 
         /// <summary>
         /// Gets the aggregate root entity.
@@ -55,10 +45,7 @@ namespace AggregateSource
         /// <value>
         /// The aggregate root entity.
         /// </value>
-        public IAggregateRootEntity Root
-        {
-            get { return _root; }
-        }
+        public IAggregateRootEntity Root => _root;
 
         /// <summary>
         /// Creates a mutable builder with the same contents as this instance.

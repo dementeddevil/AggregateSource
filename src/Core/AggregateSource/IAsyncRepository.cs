@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace AggregateSource
 {
@@ -12,17 +13,19 @@ namespace AggregateSource
         /// Gets the aggregate root entity associated with the specified aggregate identifier.
         /// </summary>
         /// <param name="identifier">The aggregate identifier.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>An instance of <typeparamref name="TAggregateRoot"/>.</returns>
         /// <exception cref="AggregateNotFoundException">Thrown when an aggregate is not found.</exception>
-        Task<TAggregateRoot> GetAsync(string identifier);
+        Task<TAggregateRoot> GetAsync(string identifier, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Attempts to get the aggregate root entity associated with the aggregate identifier.
         /// </summary>
         /// <param name="identifier">The aggregate identifier.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The found <typeparamref name="TAggregateRoot"/>, or empty if not found.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        Task<Optional<TAggregateRoot>> GetOptionalAsync(string identifier);
+        Task<Optional<TAggregateRoot>> GetOptionalAsync(string identifier, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Adds the aggregate root entity to this collection using the specified aggregate identifier.

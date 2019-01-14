@@ -27,7 +27,7 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when the specified <paramref name="event"/> is <c>null</c>.</exception>
         public void Record(object @event)
         {
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             _recorded.Add(@event);
         }
 

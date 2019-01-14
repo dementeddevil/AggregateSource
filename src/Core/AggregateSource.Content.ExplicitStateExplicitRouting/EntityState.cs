@@ -25,7 +25,7 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="handler"/> is null.</exception>
         protected void Register<TEvent>(Action<TEvent> handler)
         {
-            if (handler == null) throw new ArgumentNullException("handler");
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
             _router.ConfigureRoute(handler);
         }
 
@@ -36,7 +36,7 @@ namespace AggregateSource
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="event"/> is null.</exception>
         public void Route(object @event)
         {
-            if (@event == null) throw new ArgumentNullException("event");
+            if (@event == null) throw new ArgumentNullException(nameof(@event));
             _router.Route(@event);
         }
     }

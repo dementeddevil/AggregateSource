@@ -35,10 +35,7 @@ namespace AggregateSource
         /// <summary>
         /// Gets an indication if this instance has a value.
         /// </summary>
-        public bool HasValue
-        {
-            get { return _hasValue; }
-        }
+        public bool HasValue => _hasValue;
 
         /// <summary>
         /// Gets the value associated with this instance.

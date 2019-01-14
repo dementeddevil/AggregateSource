@@ -17,7 +17,7 @@ namespace AggregateSource
         public AggregateBuilder()
         {
             _identifier = null;
-            _expectedVersion = Int32.MinValue;
+            _expectedVersion = int.MinValue;
             _root = null;
         }
 
@@ -38,18 +38,12 @@ namespace AggregateSource
         /// <value>
         /// The aggregate identifier.
         /// </value>
-        public string Identifier
-        {
-            get { return _identifier; }
-        }
+        public string Identifier => _identifier;
 
         /// <summary>
         /// Gets the aggregate version.
         /// </summary>
-        public int ExpectedVersion
-        {
-            get { return _expectedVersion; }
-        }
+        public int ExpectedVersion => _expectedVersion;
 
         /// <summary>
         /// Gets the aggregate root entity.
@@ -57,10 +51,7 @@ namespace AggregateSource
         /// <value>
         /// The aggregate root entity.
         /// </value>
-        public IAggregateRootEntity Root
-        {
-            get { return _root; }
-        }
+        public IAggregateRootEntity Root => _root;
 
         /// <summary>
         /// Captures the identity of the aggregate.

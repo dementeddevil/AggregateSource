@@ -23,10 +23,8 @@ namespace AggregateSource
         /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="identifier"/> or <paramref name="event"/> is <c>null</c>.</exception>
         public Fact(string identifier, object @event)
         {
-            if (identifier == null) throw new ArgumentNullException("identifier");
-            if (@event == null) throw new ArgumentNullException("event");
-            _identifier = identifier;
-            _event = @event;
+            _identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
+            _event = @event ?? throw new ArgumentNullException(nameof(@event));
         }
 
         /// <summary>
@@ -35,14 +33,15 @@ namespace AggregateSource
         /// <value>
         /// The identifier.
         /// </value>
-        public string Identifier { get { return _identifier; } }
+        public string Identifier => _identifier;
+
         /// <summary>
         /// Gets the event.
         /// </summary>
         /// <value>
         /// The event.
         /// </value>
-        public object Event { get { return _event; } }
+        public object Event => _event;
 
         /// <summary>
         /// Determines whether the specified <see cref="Fact" /> is equal to this instance.
