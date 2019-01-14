@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AggregateSource\AggregateSource.Core.csproj" />
+    <ProjectReference Include="..\AggregateSource\AggregateSourceAsync.Core.csproj" />
   </ItemGroup>
 
 </Project>
