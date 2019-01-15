@@ -15,7 +15,7 @@ choco upgrade gitversion.portable --pre --y
 dotnet restore ./src/Core/AggregateSourceAsync.Core.sln --verbosity m
 
 # GitVersion 
-$str = gitversion /updateAssemblyInfo | out-string
+$str = gitversion /updateAssemblyInfo SharedVersionInfo.cs | out-string
 $json = convertFrom-json $str
 $nugetversion = $json.NuGetVersion
 
