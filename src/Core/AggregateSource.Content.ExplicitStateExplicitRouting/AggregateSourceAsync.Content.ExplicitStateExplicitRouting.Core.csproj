@@ -7,6 +7,20 @@
     <RootNamespace>AggregateSource</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>AggregateSourceAsync.Content.ExplicitStateExplicitRouting</PackageId>
+    <Title>AggregateSourceAsync.Content.ExplicitStateExplicitRouting</Title>
+    <Authors>AggregateSource Dev Team;Adrian Lewis</Authors>
+    <PackageProjectUrl>https://github.com/dementeddevil/AggregateSourceAsync.Content.ExplicitStateExplicitRouting</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dementeddevil/AggregateSourceAsync.Content.ExplicitStateExplicitRouting.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>AggregateSourceAsync is an async capable version of AggregateSource project.</Description>
+    <PackageTags>events, event sourcing, cqrs, storage, persistence, database</PackageTags>
+    <PackageReleaseNotes>This package is similar to but incompatible with AggregateSource! Please check the release notes on github.</PackageReleaseNotes>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">TRACE;DEBUG;NETSTANDARD2_0</DefineConstants>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">NETSTANDARD2_0</DefineConstants>
